@@ -1,20 +1,20 @@
 <x-auth-layout title="Login">
     <main class="flex justify-center h-screen items-center" >
         {{-- container --}}
-        <form action="{{ route('auth.login') }}" method="POST" class="bg-white w-auto h-auto p-10 rounded-2xl shadow-lg">
+        <form action="{{ route('auth.authenticate') }}" method="POST" class="bg-white w-auto h-auto p-10 rounded-2xl shadow-lg">
             @csrf
             <input type="hidden" name="role" id="role" value="job_seeker">
             {{-- Judul dan deskripsi --}}
-            <div class="flex flex-col items-center mb-5   ">
-                <h2 class="text-primary text-xl font-bold">Lokal Kerja</h2>
+            <div class="flex flex-col items-center   ">
+                <h2 class="text-primary text-2xl font-bold">Login</h2>
                 <p class="text-gray-500">Silahkan masuk ke akun anda</p>
             </div>
 
-            {{-- navigasi pencari kerja dan perusahaan --}}
+            {{-- navigasi pencari kerja dan perusahaan
             <div class="flex justify-evenly w-lg gap-10 rounded-xl font-semibold p-1.5 bg-gray-200 text-primary">
                 <button type="button" id="jobBtn" class="bg-white ease-in-out transition-all delay-100 py-3 px-10 rounded-lg role-btn">Pencari Kerja</button>
                 <button type="button" id="companyBtn" class="py-3 px-10 rounded-lg  ease-in-out transition-all delay-150 role-btn">Perusahaan</button>
-            </div>
+            </div> --}}
 
             {{-- container email dan kata sandi --}}
             <div class="mt-5">

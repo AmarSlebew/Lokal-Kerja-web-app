@@ -25,18 +25,20 @@ class authController extends Controller
     public function store(Request $request)
     {
         $validate = $request->validate([
-            'name' => 'required',
+            'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
-            'password' => 'required',
+            'password' => 'required|min:6',
             'confirm_password' => 'required|same:password',
+            'role' => 'required|in:job_seeker,company',
         ]);
 
         User::create([
             'name' => $validate['name'],
             'email' => $validate['email'],
-            'password' =>hash::make($validate['password'])
+            'password' => Hash::make($validate['password']),
+            'role' => $validate['role']
         ]);
-        return redirect()->route('auth.login')->with('success', 'Register Success');
+        return redirect()->route('auth.login')->with('success', 'Registrasi berhasil! Silakan login dengan akun Anda.');
     }
     public function authenticate(Request $request)
     {
@@ -45,15 +47,20 @@ class authController extends Controller
             'password' => 'required',
         ]);
 
+        // Attempt authentication with email & password only
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('dashboard');
-        }
+
+            if (Auth::user()->role == 'job_seeker'){
+                return redirect()->route('jobs.index');
+            }else if (Auth::user()->role == 'company') {
+                    return redirect()->route('company.dashboard');
+            }
 
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');
-    }
+    }}
 
     public function logout(Request $request){
         auth::logout();
