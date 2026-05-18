@@ -60,34 +60,110 @@ class ProfileController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Store new experience into JSON array.
      */
-    public function show(string $id)
+    public function storeExperience(Request $request)
     {
-        //
+        $data = $request->validate([
+            'company_name' => 'required|string|max:255',
+            'job_title' => 'required|string|max:255',
+            'start_date' => 'required|string|max:255',
+            'end_date' => 'nullable|string|max:255',
+        ]);
+
+        $profile = Auth::user()->profile ?? Profile::create(['user_id' => Auth::id()]);
+        $experiences = $profile->experience ?? [];
+        $experiences[] = $data;
+        $profile->update(['experience' => $experiences]);
+
+        return back()->with('success', 'Pengalaman kerja berhasil ditambahkan.');
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Remove an experience from JSON array by index.
      */
-    public function edit(string $id)
+    public function destroyExperience(int $index)
     {
-        //
+        $profile = Auth::user()->profile;
+        if ($profile) {
+            $experiences = $profile->experience ?? [];
+            if (isset($experiences[$index])) {
+                array_splice($experiences, $index, 1);
+                $profile->update(['experience' => $experiences]);
+            }
+        }
+        return back()->with('success', 'Pengalaman kerja berhasil dihapus.');
     }
 
     /**
-     * Update the specified resource in storage.
+     * Store new education into JSON array.
      */
-    public function update(Request $request, string $id)
+    public function storeEducation(Request $request)
     {
-        //
+        $data = $request->validate([
+            'school_name' => 'required|string|max:255',
+            'degree' => 'nullable|string|max:255',
+            'major' => 'nullable|string|max:255',
+            'start_year' => 'required|string|max:255',
+            'end_year' => 'nullable|string|max:255',
+        ]);
+
+        $profile = Auth::user()->profile ?? Profile::create(['user_id' => Auth::id()]);
+        $educations = $profile->education ?? [];
+        $educations[] = $data;
+        $profile->update(['education' => $educations]);
+
+        return back()->with('success', 'Pendidikan berhasil ditambahkan.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove an education from JSON array by index.
      */
-    public function destroy(string $id)
+    public function destroyEducation(int $index)
     {
-        //
+        $profile = Auth::user()->profile;
+        if ($profile) {
+            $educations = $profile->education ?? [];
+            if (isset($educations[$index])) {
+                array_splice($educations, $index, 1);
+                $profile->update(['education' => $educations]);
+            }
+        }
+        return back()->with('success', 'Pendidikan berhasil dihapus.');
+    }
+
+    /**
+     * Store new skill into JSON array.
+     */
+    public function storeSkill(Request $request)
+    {
+        $data = $request->validate([
+            'skill_name' => 'required|string|max:255',
+        ]);
+
+        $profile = Auth::user()->profile ?? Profile::create(['user_id' => Auth::id()]);
+        $skills = $profile->skills ?? [];
+        if (!in_array($data['skill_name'], $skills)) {
+            $skills[] = $data['skill_name'];
+            $profile->update(['skills' => $skills]);
+        }
+
+        return back()->with('success', 'Keahlian berhasil ditambahkan.');
+    }
+
+    /**
+     * Remove a skill from JSON array by index.
+     */
+    public function destroySkill(int $index)
+    {
+        $profile = Auth::user()->profile;
+        if ($profile) {
+            $skills = $profile->skills ?? [];
+            if (isset($skills[$index])) {
+                array_splice($skills, $index, 1);
+                $profile->update(['skills' => $skills]);
+            }
+        }
+        return back()->with('success', 'Keahlian berhasil dihapus.');
     }
 }

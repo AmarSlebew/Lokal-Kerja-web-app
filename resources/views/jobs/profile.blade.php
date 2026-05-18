@@ -71,47 +71,39 @@
                                     <p class="text-sm text-slate-500">Kelola riwayat kerja Anda.</p>
                                 </div>
                             </div>
-                            <button class="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-slate-100">
+                            <button type="button" onclick="document.getElementById('modalExperience').classList.remove('hidden')" class="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-slate-100">
                                 <x-lucide-plus class="h-4 w-4" /> Tambah
                             </button>
                         </div>
 
                         <div class="space-y-4">
-                            <article class="rounded-3xl border border-slate-200 bg-slate-50 p-4">
-                                <div class="flex items-start justify-between gap-4">
-                                    <div class="flex items-start gap-4">
-                                        <div class="flex h-12 w-12 items-center justify-center rounded-3xl bg-white text-slate-950 shadow-sm">
-                                            <x-lucide-briefcase class="h-5 w-5" />
+                            @if(isset($profile) && $profile->experience && count($profile->experience) > 0)
+                                @foreach($profile->experience as $index => $exp)
+                                <article class="rounded-3xl border border-slate-200 bg-slate-50 p-4">
+                                    <div class="flex items-start justify-between gap-4">
+                                        <div class="flex items-start gap-4">
+                                            <div class="flex h-12 w-12 items-center justify-center rounded-3xl bg-white text-slate-950 shadow-sm">
+                                                <x-lucide-briefcase class="h-5 w-5" />
+                                            </div>
+                                            <div>
+                                                <h3 class="text-base font-semibold text-slate-950">{{ $exp['job_title'] ?? '' }}</h3>
+                                                <p class="text-sm text-slate-500">{{ $exp['company_name'] ?? '' }}</p>
+                                                <p class="mt-2 text-xs text-slate-400">{{ $exp['start_date'] ?? '' }} - {{ !empty($exp['end_date']) ? $exp['end_date'] : 'Sekarang' }}</p>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <h3 class="text-base font-semibold text-slate-950">Senior Product Manager</h3>
-                                            <p class="text-sm text-slate-500">Tech Indo Solusindo</p>
-                                            <p class="mt-2 text-xs text-slate-400">Jan 2021 - Sekarang</p>
-                                        </div>
+                                        <form action="{{ route('profile.experience.destroy', $index) }}" method="POST" onsubmit="return confirm('Hapus pengalaman ini?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-rose-500 transition hover:bg-rose-50 hover:text-rose-600">
+                                                <x-lucide-trash-2 class="h-4 w-4" />
+                                            </button>
+                                        </form>
                                     </div>
-                                    <button class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-slate-500 transition hover:bg-slate-100 hover:text-slate-900">
-                                        <x-lucide-pencil class="h-4 w-4" />
-                                    </button>
-                                </div>
-                            </article>
-
-                            <article class="rounded-3xl border border-slate-200 bg-slate-50 p-4">
-                                <div class="flex items-start justify-between gap-4">
-                                    <div class="flex items-start gap-4">
-                                        <div class="flex h-12 w-12 items-center justify-center rounded-3xl bg-white text-slate-950 shadow-sm">
-                                            <x-lucide-briefcase class="h-5 w-5" />
-                                        </div>
-                                        <div>
-                                            <h3 class="text-base font-semibold text-slate-950">Junior Analyst</h3>
-                                            <p class="text-sm text-slate-500">Data Nusantara Corp</p>
-                                            <p class="mt-2 text-xs text-slate-400">Jun 2018 - Des 2020</p>
-                                        </div>
-                                    </div>
-                                    <button class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-slate-500 transition hover:bg-slate-100 hover:text-slate-900">
-                                        <x-lucide-pencil class="h-4 w-4" />
-                                    </button>
-                                </div>
-                            </article>
+                                </article>
+                                @endforeach
+                            @else
+                                <p class="text-sm text-slate-500">Belum ada pengalaman kerja ditambahkan.</p>
+                            @endif
                         </div>
                     </section>
                 </div>
@@ -142,21 +134,40 @@
                                     <h2 class="text-xl font-semibold text-slate-950">Pendidikan</h2>
                                 </div>
                             </div>
-                            <button class="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-950 transition hover:bg-slate-100">
+                            <button type="button" onclick="document.getElementById('modalEducation').classList.remove('hidden')" class="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-950 transition hover:bg-slate-100">
                                 <x-lucide-plus class="h-4 w-4" />
                             </button>
                         </div>
-                        <div class="rounded-3xl border border-slate-200 bg-slate-50 p-4">
-                            <div class="flex items-start gap-4">
-                                <div class="flex h-10 w-10 items-center justify-center rounded-3xl bg-white text-slate-950 shadow-sm">
-                                    <x-lucide-school class="h-5 w-5" />
+                        <div class="space-y-4">
+                            @if(isset($profile) && $profile->education && count($profile->education) > 0)
+                                @foreach($profile->education as $index => $edu)
+                                <div class="rounded-3xl border border-slate-200 bg-slate-50 p-4 flex justify-between items-start">
+                                    <div class="flex items-start gap-4">
+                                        <div class="flex h-10 w-10 items-center justify-center rounded-3xl bg-white text-slate-950 shadow-sm">
+                                            <x-lucide-school class="h-5 w-5" />
+                                        </div>
+                                        <div class="min-w-0">
+                                            <h3 class="text-sm font-semibold text-slate-950">{{ $edu['school_name'] ?? '' }}</h3>
+                                            @if(!empty($edu['degree']) || !empty($edu['major']))
+                                                <p class="mt-1 text-sm text-slate-500">
+                                                    {{ $edu['degree'] ?? '' }}{{ !empty($edu['degree']) && !empty($edu['major']) ? ' - ' : '' }}{{ $edu['major'] ?? '' }}
+                                                </p>
+                                            @endif
+                                            <p class="mt-2 text-xs text-slate-400">{{ $edu['start_year'] ?? '' }} - {{ !empty($edu['end_year']) ? $edu['end_year'] : 'Sekarang' }}</p>
+                                        </div>
+                                    </div>
+                                    <form action="{{ route('profile.education.destroy', $index) }}" method="POST" onsubmit="return confirm('Hapus pendidikan ini?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-rose-500 transition hover:bg-rose-50 hover:text-rose-600">
+                                            <x-lucide-trash-2 class="h-4 w-4" />
+                                        </button>
+                                    </form>
                                 </div>
-                                <div class="min-w-0">
-                                    <h3 class="text-sm font-semibold text-slate-950">Universitas Indonesia</h3>
-                                    <p class="mt-1 text-sm text-slate-500">S1 Teknik Informatika</p>
-                                    <p class="mt-2 text-xs text-slate-400">2014 - 2018</p>
-                                </div>
-                            </div>
+                                @endforeach
+                            @else
+                                <p class="text-sm text-slate-500">Belum ada pendidikan ditambahkan.</p>
+                            @endif
                         </div>
                     </section>
 
@@ -170,25 +181,28 @@
                             </div>
                         </div>
                         <div class="flex flex-wrap gap-2 text-sm text-slate-700">
-                            <span class="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2">
-                                Product Mgmt
-                                <button class="transition hover:text-rose-600"><x-lucide-x class="h-4 w-4" /></button>
-                            </span>
-                            <span class="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2">
-                                Data Analysis
-                                <button class="transition hover:text-rose-600"><x-lucide-x class="h-4 w-4" /></button>
-                            </span>
-                            <span class="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2">
-                                UI/UX
-                                <button class="transition hover:text-rose-600"><x-lucide-x class="h-4 w-4" /></button>
-                            </span>
+                            @if(isset($profile) && $profile->skills && count($profile->skills) > 0)
+                                @foreach($profile->skills as $index => $skill)
+                                <span class="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2">
+                                    {{ $skill }}
+                                    <form action="{{ route('profile.skill.destroy', $index) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="transition hover:text-rose-600"><x-lucide-x class="h-4 w-4" /></button>
+                                    </form>
+                                </span>
+                                @endforeach
+                            @else
+                                <p class="text-sm text-slate-500">Belum ada keahlian ditambahkan.</p>
+                            @endif
                         </div>
-                        <div class="mt-6 relative">
-                            <input type="text" placeholder="Tambah keahlian..." class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-300" />
-                            <button class="absolute right-3 top-1/2 -translate-y-1/2 inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-950 text-white transition hover:bg-slate-800">
+                        <form action="{{ route('profile.skill.store') }}" method="POST" class="mt-6 relative">
+                            @csrf
+                            <input type="text" name="skill_name" required placeholder="Tambah keahlian..." class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-300" />
+                            <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-950 text-white transition hover:bg-slate-800">
                                 <x-lucide-plus class="h-4 w-4" />
                             </button>
-                        </div>
+                        </form>
                     </section>
                 </div>
             </div>
@@ -220,7 +234,78 @@
             saveButton.classList.toggle('cursor-not-allowed', !hasChanged);
         }
 
-        fields.forEach(field => field.addEventListener('input', updateSaveButton));
+        fields.forEach(field => {
+            if(field) field.addEventListener('input', updateSaveButton);
+        });
         updateSaveButton();
     </script>
+
+    <div id="modalExperience" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm transition-opacity">
+        <div class="w-full max-w-md rounded-3xl bg-white p-6 shadow-xl">
+            <h2 class="mb-4 text-xl font-semibold text-slate-950">Tambah Pengalaman Kerja</h2>
+            <form action="{{ route('profile.experience.store') }}" method="POST" class="space-y-4">
+                @csrf
+                <div>
+                    <label class="block text-sm text-slate-600">Perusahaan</label>
+                    <input type="text" name="company_name" required class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-300" />
+                </div>
+                <div>
+                    <label class="block text-sm text-slate-600">Posisi / Jabatan</label>
+                    <input type="text" name="job_title" required class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-300" />
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm text-slate-600">Mulai (Bulan/Tahun)</label>
+                        <input type="text" name="start_date" placeholder="Jan 2021" required class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-300" />
+                    </div>
+                    <div>
+                        <label class="block text-sm text-slate-600">Selesai (Opsional)</label>
+                        <input type="text" name="end_date" placeholder="Kosongkan jika sekarang" class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-300" />
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-end gap-3">
+                    <button type="button" onclick="document.getElementById('modalExperience').classList.add('hidden')" class="rounded-2xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-50">Batal</button>
+                    <button type="submit" class="rounded-2xl bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Pendidikan -->
+    <div id="modalEducation" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm transition-opacity">
+        <div class="w-full max-w-md rounded-3xl bg-white p-6 shadow-xl">
+            <h2 class="mb-4 text-xl font-semibold text-slate-950">Tambah Pendidikan</h2>
+            <form action="{{ route('profile.education.store') }}" method="POST" class="space-y-4">
+                @csrf
+                <div>
+                    <label class="block text-sm text-slate-600">Nama Instansi (Sekolah / Universitas)</label>
+                    <input type="text" name="school_name" required class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-300" />
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm text-slate-600">Gelar (Opsional)</label>
+                        <input type="text" name="degree" placeholder="S1, D3 (Kosongkan jika SMA/SMP)" class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-300" />
+                    </div>
+                    <div>
+                        <label class="block text-sm text-slate-600">Jurusan (Opsional)</label>
+                        <input type="text" name="major" placeholder="IPA, Teknik Komputer" class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-300" />
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm text-slate-600">Tahun Mulai</label>
+                        <input type="number" name="start_year" required placeholder="2018" class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-300" />
+                    </div>
+                    <div>
+                        <label class="block text-sm text-slate-600">Tahun Selesai (Opsional)</label>
+                        <input type="number" name="end_year" placeholder="2021" class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-300" />
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-end gap-3">
+                    <button type="button" onclick="document.getElementById('modalEducation').classList.add('hidden')" class="rounded-2xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-50">Batal</button>
+                    <button type="submit" class="rounded-2xl bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </x-job-layout>
