@@ -172,6 +172,7 @@ class ProfileController extends Controller
      */
     public function generateCv(Request $request)
     {
+        set_time_limit(120);
         $user = Auth::user();
         $profile = $user->profile;
 

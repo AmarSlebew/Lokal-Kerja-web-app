@@ -59,13 +59,7 @@
                 Menampilkan <span class="font-bold text-slate-900">{{ number_format($totalJobs, 0, ',', '.') }}</span> lowongan kerja
             </div>
             
-            <div class="flex items-center gap-2 text-sm">
-                <span class="font-semibold text-slate-500 uppercase text-xs tracking-wider">Urutkan:</span>
-                <select class="border-none bg-transparent py-0 pl-1 pr-6 text-sm font-bold text-slate-900 outline-none focus:ring-0 cursor-pointer">
-                    <option value="terbaru">Terbaru</option>
-                    <option value="terpopuler">Terpopuler</option>
-                </select>
-            </div>
+            
         </div>
 
         <!-- Job List -->
