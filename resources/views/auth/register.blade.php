@@ -1,40 +1,4 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar - LokalKerja</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script>
-        function switchRole(role) {
-            document.getElementById('role_input').value = role;
-            
-            // Update tab styling
-            const tabs = document.querySelectorAll('[data-role-tab]');
-            tabs.forEach(tab => {
-                if (tab.getAttribute('data-role-tab') === role) {
-                    tab.classList.remove('text-gray-500', 'border-transparent');
-                    tab.classList.add('text-indigo-900', 'border-b-2', 'border-indigo-900', 'font-semibold');
-                } else {
-                    tab.classList.remove('text-indigo-900', 'border-b-2', 'border-indigo-900', 'font-semibold');
-                    tab.classList.add('text-gray-500', 'border-transparent');
-                }
-            });
-        }
-    </script>
-</head>
-<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
-    <!-- Header -->
-    <header class="bg-white shadow-sm py-4 px-6">
-        <div class="max-w-6xl mx-auto flex items-center justify-between">
-            <div class="text-2xl font-bold text-indigo-900">LokalKerja</div>
-            <nav class="flex items-center gap-4">
-                <a href="#" class="text-gray-700 hover:text-gray-900">Cari Lowongan</a>
-                <a href="{{ route('auth.login') }}" class="text-gray-700 hover:text-gray-900">Login</a>
-                <a href="{{ route('auth.register') }}" class="bg-indigo-900 text-white px-6 py-2 rounded-md hover:bg-indigo-800">Daftar</a>
-            </nav>
-        </div>
-    </header>
+<x-auth-layout title="register">
 
     <!-- Main Content -->
     <div class="flex items-center justify-center py-12 px-4">
@@ -52,13 +16,13 @@
                     onclick="switchRole('job_seeker')"
                     data-role-tab="job_seeker"
                     class="flex-1 py-3 text-center text-indigo-900 border-b-2 border-indigo-900 font-semibold transition">
-                    📋 Pencari Kerja
+                    Pencari Kerja
                 </button>
                 <button 
                     onclick="switchRole('company')"
                     data-role-tab="company"
                     class="flex-1 py-3 text-center text-gray-500 border-transparent transition">
-                    🏢 Perusahaan
+                    Perusahaan
                 </button>
             </div>
 
@@ -71,9 +35,10 @@
 
                 <!-- Full Name -->
                 <div>
-                    <label class="block text-gray-700 text-sm font-medium mb-2">Nama Lengkap</label>
+                    <label id="name_label" class="block text-gray-700 text-sm font-medium mb-2">Nama Lengkap</label>
                     <input 
                         type="text" 
+                        id="name_input"
                         name="name" 
                         placeholder="Masukkan nama lengkap Anda"
                         value="{{ old('name') }}"
@@ -127,18 +92,7 @@
                     </div>
                 </div>
 
-                <!-- Terms Checkbox -->
-                <div class="flex items-start gap-2 mt-4">
-                    <input 
-                        type="checkbox" 
-                        id="agree_terms"
-                        name="agree_terms"
-                        class="mt-1 w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500"
-                        required>
-                    <label for="agree_terms" class="text-gray-600 text-xs">
-                        Saya setuju dengan <a href="#" class="text-indigo-600 hover:underline">Syarat & Ketentuan</a> serta <a href="#" class="text-indigo-600 hover:underline">Kebijakan Privasi</a>
-                    </label>
-                </div>
+                
 
                 <!-- Submit Button -->
                 <button 
@@ -147,22 +101,9 @@
                     Daftar Sekarang
                 </button>
 
-                <!-- Divider -->
-                <div class="flex items-center gap-4 my-4">
-                    <div class="flex-1 border-t border-gray-300"></div>
-                    <span class="text-gray-500 text-xs">Atau daftar dengan</span>
-                    <div class="flex-1 border-t border-gray-300"></div>
-                </div>
 
-                <!-- Google Sign Up -->
-                <button 
-                    type="button"
-                    class="w-full border border-gray-300 text-gray-700 font-medium py-2 rounded-md hover:bg-gray-50 transition flex items-center justify-center gap-2">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24">
-                        <text x="5" y="18" font-size="16" fill="currentColor">G</text>
-                    </svg>
-                    Google
-                </button>
+
+            
             </form>
 
             <!-- Login Link -->
@@ -172,5 +113,34 @@
 
         </div>
     </div>
-</body>
-</html>
+
+    <script>
+        function switchRole(role) {
+            document.getElementById('role_input').value = role;
+            
+            // Update tab styling
+            const tabs = document.querySelectorAll('[data-role-tab]');
+            tabs.forEach(tab => {
+                if (tab.getAttribute('data-role-tab') === role) {
+                    tab.classList.remove('text-gray-500', 'border-transparent');
+                    tab.classList.add('text-indigo-900', 'border-b-2', 'border-indigo-900', 'font-semibold');
+                } else {
+                    tab.classList.remove('text-indigo-900', 'border-b-2', 'border-indigo-900', 'font-semibold');
+                    tab.classList.add('text-gray-500', 'border-transparent');
+                }
+            });
+
+            // Update label & placeholder berdasarkan role
+            const nameLabel = document.getElementById('name_label');
+            const nameInput = document.getElementById('name_input');
+            if (role === 'company') {
+                nameLabel.textContent = 'Nama Perusahaan';
+                nameInput.placeholder = 'Masukkan nama perusahaan Anda';
+            } else {
+                nameLabel.textContent = 'Nama Lengkap';
+                nameInput.placeholder = 'Masukkan nama lengkap Anda';
+            }
+        }
+    </script>
+</x-auth-layout>
+

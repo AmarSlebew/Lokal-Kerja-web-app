@@ -17,6 +17,42 @@
             </div>
 
             <div class="grid gap-6 lg:grid-cols-[2fr_1fr]">
+                
+                @if(session('success'))
+                    <div class="col-span-full rounded-2xl bg-green-50 p-4 border border-green-200">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <x-lucide-check-circle class="h-5 w-5 text-green-400" />
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm font-medium text-green-800">{{ session('success') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                @if(session('error') || $errors->any())
+                    <div class="col-span-full rounded-2xl bg-red-50 p-4 border border-red-200">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <x-lucide-alert-circle class="h-5 w-5 text-red-400" />
+                            </div>
+                            <div class="ml-3">
+                                @if(session('error'))
+                                    <p class="text-sm font-medium text-red-800">{{ session('error') }}</p>
+                                @endif
+                                @if($errors->any())
+                                    <ul class="list-inside list-disc text-sm font-medium text-red-800">
+                                        @foreach($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 <div class="space-y-6">
                     <section class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
                         <div class="mb-6 flex items-center gap-3 border-b border-slate-200 pb-4">
@@ -34,11 +70,17 @@
                             <div class="grid gap-4 md:grid-cols-2">
                                 <label class="block text-sm text-slate-600">
                                     Nama Lengkap
-                                    <input id="nameInput" type="text" name="name" value="{{ old('name', $user->name) }}" class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-300" />
+                                    <input id="nameInput" type="text" name="name" value="{{ old('name', $user->name) }}" required class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-300" />
+                                    @error('name')
+                                        <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
+                                    @enderror
                                 </label>
                                 <label class="block text-sm text-slate-600">
                                     Email
-                                    <input id="emailInput" type="email" name="email" value="{{ old('email', $user->email) }}" class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-300" />
+                                    <input id="emailInput" type="email" name="email" value="{{ old('email', $user->email) }}" required class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-300" />
+                                    @error('email')
+                                        <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
+                                    @enderror
                                 </label>
                             </div>
 
@@ -119,9 +161,12 @@
                                 <p class="mt-1 text-sm text-slate-500">Pastikan informasi akurat untuk hasil CV profesional.</p>
                             </div>
                         </div>
-                        <button class="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">
-                            <x-lucide-rocket class="h-4 w-4" /> Generate CV dengan AI
-                        </button>
+                        <form action="{{ route('profile.generate_cv') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">
+                                <x-lucide-rocket class="h-4 w-4" /> Generate CV dengan AI
+                            </button>
+                        </form>
                     </section>
 
                     <section class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">

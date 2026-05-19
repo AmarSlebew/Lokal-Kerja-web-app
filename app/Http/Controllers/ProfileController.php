@@ -166,4 +166,30 @@ class ProfileController extends Controller
         }
         return back()->with('success', 'Keahlian berhasil dihapus.');
     }
+
+    /**
+     * Generate CV with AI Agent
+     */
+    public function generateCv(Request $request)
+    {
+        $user = Auth::user();
+        $profile = $user->profile;
+
+        if (!$profile) {
+            return back()->with('error', 'Silakan simpan dan lengkapi data profil terlebih dahulu.');
+        }
+
+        $agent = new \App\Ai\Agents\GenerateCvAgent($user, $profile);
+
+        try {
+            // Memanggil agent dengan prompt awal. 
+            $response = $agent->prompt('Tolong buatkan teks lengkap untuk CV saya berdasarkan data profil.');
+
+            return view('jobs.cv-result', [
+                'cvText' => $response->text
+            ]);
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal memproses CV dengan AI: ' . $e->getMessage());
+        }
+    }
 }

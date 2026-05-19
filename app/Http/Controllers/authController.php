@@ -50,11 +50,16 @@ class authController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('dashboard');
+
+            if (Auth::user()->role === 'company') {
+                return redirect()->route('company.dashboard');
+            }
+
+            return redirect()->route('jobs.index');
         }
 
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
+            'email' => 'Email atau password yang Anda masukkan salah.',
         ])->onlyInput('email');
     }
 
