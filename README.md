@@ -514,7 +514,7 @@ Proyek ini adalah proyek akademik (UAS). Jika Anda ingin berkontribusi atau memb
 
 <div align="center">
 
-**Dibuat dengan ❤️ menggunakan Laravel & Gemini AI**
+**Dibuat dengan ❤️ menggunakan Laravel**
 
 *UAS Pemrograman Web — Semester 4*
 
